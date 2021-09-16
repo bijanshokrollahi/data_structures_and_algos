@@ -151,13 +151,23 @@ def create_stack_from_finish_times(finish_times: list) -> list:
 
 
 def find_all_nodes_in_cycle(g):  # g is an UndirectedGraph class
-    set_of_nodes = set()
+    # todo
     # your code here
-    mscc = get_mscc(g)
-    for scc in mscc:
-        for val in scc:
-            set_of_nodes.add(val)
-    return set_of_nodes
+    dfs_tree_parents, non_trivial_back_edges, discovery_times, finish_times = g.dfs_traverse_graph()
+    python_set = set()
+    for thing in non_trivial_back_edges:
+        for item in thing:
+            python_set.add(item)
+    ret_set = set()
+    for node in python_set:
+        neighbors = g.get_neighboring_vertices(node)
+        if len(neighbors) > 1:
+            ret_set.add(node)
+            for neighbor in neighbors:
+                neighbor_neighbors = g.get_neighboring_vertices(neighbor)
+                if len(neighbor_neighbors) > 1:
+                    ret_set.add(neighbor)
+    return ret_set
 
 
 def get_mscc(g):

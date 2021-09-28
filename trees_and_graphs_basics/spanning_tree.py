@@ -41,9 +41,13 @@ class DisjointForests:
     # nodes along path from j to the root point directly to the root.
     def find(self, j):
         assert 0 <= j < self.n
-        assert \
-        self.parents[j] is not None, 'You are calling find on an element that is not part of the family yet. Please call make_set first.'
+        assert self.parents[
+                   j] is not None, 'You are calling find on an element that is not part of the family yet. ' \
+                                   'Please call make_set first.'
         # your code here
+        if j != self.parents[j]:
+            self.parents[j] = self.find(self.parents[j])
+        return self.parents[j]
 
     # Function : union
     # Compute union of j1 and j2
@@ -58,6 +62,15 @@ class DisjointForests:
         assert self.parents[j1] is not None
         assert self.parents[j2] is not None
         # your code here
+        self.link(self.find(j1), self.find(j2))
+
+    def link(self, x, y):
+        if self.rank[x] > self.rank[y]:
+            self.parents[y] = x
+        else:
+            self.parents[x] = y
+            if self.rank[x] == self.rank[y]:
+                self.rank[y] += 1
 
 
 class UndirectedGraph:
@@ -96,7 +109,12 @@ def compute_scc(g, W):
     # Next compute the strongly connected components using the disjoint forest data structure
     d = DisjointForests(g.n)
     # your code here
+    for i in range(g.n):
+        d.make_set(i)
 
+    for i in range(g.n):
+        if g.edges[i][2] <= W:
+            d.union(g.edges[i][0], g.edges[i][1])
     # extract a set of sets from d
     return d.dictionary_of_sets()
 
@@ -109,5 +127,12 @@ def compute_mst(g):
     mst_edges = []
     g.sort_edges()
     # your code here
-
-
+    a = 0
+    for i in range(g.n):
+        d.make_set(i)
+    for edge in g.edges:
+        if d.find(edge[0]) != d.find(edge[1]):
+            d.union(edge[0], edge[1])
+            a += edge[2]
+            mst_edges.append(edge)
+    return mst_edges, a

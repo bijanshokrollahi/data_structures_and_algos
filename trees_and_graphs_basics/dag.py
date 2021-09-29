@@ -241,7 +241,7 @@ def computeShortestPath(graph, source_coordinates, dest_coordinates):
             if v[0].processed is False and v[0].d > u.d + v[1]:
                 v[0].d = u.d + v[1]
                 v[0].pi = u
-                if v[0] not in priority_queue:
+                if v[0].idx_in_priority_queue == -1:
                     priority_queue.insert(v[0])
                 else:
                     priority_queue.update_vertex_weight(v[0])

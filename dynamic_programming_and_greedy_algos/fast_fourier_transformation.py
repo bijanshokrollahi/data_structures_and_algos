@@ -4,7 +4,7 @@ copyright bijan shokrollahi
 
 """
 
-from numpy.fft import fft, ifft
+from numpy.fft import fft, ifft, fftfreq
 from numpy import real, imag
 import csv
 from matplotlib import pyplot as plt

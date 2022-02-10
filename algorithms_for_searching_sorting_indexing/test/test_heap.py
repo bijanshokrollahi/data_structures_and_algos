@@ -1,5 +1,6 @@
 import unittest
-from basic_ds_and_heaps import MinHeap, TopKHeap, MaxHeap, MedianMaintainingHeap
+from algorithms_for_searching_sorting_indexing.basic_ds_and_heaps import MinHeap, TopKHeap, MaxHeap, \
+    MedianMaintainingHeap
 
 
 class MyTestCase(unittest.TestCase):

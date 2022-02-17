@@ -211,3 +211,130 @@ class HeapDS:
 
     def minimum(self):
         return
+
+
+class ListItem:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.next = None
+
+
+class HashTable:
+    def __init__(self, size_of_arr: int = 16):
+        self.arr = [None] * size_of_arr
+        self.index = 0
+
+    def __len__(self) -> int:
+        return self.index
+
+    def _size_of_arr(self) -> int:
+        return len(self.arr)
+
+    def _hash(self, val) -> int:
+        return hash(val)
+
+    def insert(self, key, val) -> None:
+        if ((self.index + 1) / self._size_of_arr()) >= .75:
+            self.resize_hash_table()
+        self._insert(key, val, self.arr)
+        self.index += 1
+
+    @staticmethod
+    def _insert(key, val, arr: list) -> None:
+        hash_val = hash(key)
+        mod = hash_val % len(arr)
+        if arr[mod] is None:
+            arr[mod] = ListItem(key, val)
+        else:
+            curr = ListItem(key, val)
+            curr.next = arr[mod]
+            arr[mod] = curr
+
+    def get(self, key, return_if_not_found=None) -> any:
+        """
+
+        :param key: key to find value
+        :param return_if_not_found: if key is not in dictionary, return return_if_not_found
+        :return: will return the value of the specified key, None or return_if_not_found if defined
+        """
+        hash_val = self._hash(key)
+        mod = hash_val % self._size_of_arr()
+        if self.arr[mod] is None:
+            return return_if_not_found
+        else:
+            curr = self.arr[mod]
+            while curr.key != key:
+                curr = curr.next
+                if curr is None:
+                    return return_if_not_found
+            return curr.val
+
+    def resize_hash_table(self) -> None:
+        new_arr = [None] * (2 * self._size_of_arr())
+        for i in range(0, self._size_of_arr()):
+            curr = self.arr[i]
+            while curr is not None:
+                self._insert(curr.key, curr.val, new_arr)
+                curr = curr.next
+        self.arr = new_arr
+
+    def delete(self, key) -> bool:
+        """
+        find the hash
+        find the mod
+        find the head
+        if head is none return false
+        else curr = head
+        prev = curr
+        while curr.val is not val
+        prev = curr
+        curr = curr.next
+        prev.next = curr.next
+        delete(curr)
+        return True
+        """
+        hash_val = self._hash(key)
+        mod = hash_val % self._size_of_arr()
+        head = self.arr[mod]
+        if head is None:
+            return False
+        if head.key == key:
+            self.arr[mod] = head.next
+            self.index -= 1
+            return True
+        curr = head
+        prev = None
+        while curr.key != key:
+            prev = curr
+            curr = curr.next
+            if curr is None:
+                return False
+        prev.next = curr.next
+        self.index -= 1
+        return True
+
+
+class QuickSort:
+    def __init__(self, arr: list):
+        self.arr = arr
+
+    def sort(self):
+        self._quick_sort(0, len(self.arr) - 1)
+
+    def _quick_sort(self, left, right):
+        if left < right:
+            pivot = self.partition(left, right)
+            self._quick_sort(left, pivot - 1)
+            self._quick_sort(pivot + 1, right)
+
+    def partition(self, left, right):
+        x = self.arr[right]
+        i = left - 1
+        for j in range(left, right):
+            if self.arr[j] <= x:
+                i = i + 1
+                self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
+        self.arr[i+1], self.arr[right] = self.arr[right], self.arr[i+1]
+        return i+1
+

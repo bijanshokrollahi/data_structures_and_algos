@@ -68,6 +68,66 @@ class MyTestCase(unittest.TestCase):
         heap.heapify()
         self.assertEqual([1, 1, 12, 12, 9, 16, 18, 100, 44], heap.get_heap())
 
+    def test_hash_map(self):
+        hash_table = HashTable()
+        hash_table.insert('a', 44)
+        hash_table.insert('b', 55)
+        hash_table.insert('c', 2)
+        hash_table.insert('d', 57)
+        hash_table.insert('e', 122)
+        hash_table.insert('f', 1)
+        self.assertEqual(6, len(hash_table))
+        val = hash_table.get('b')
+        self.assertEqual(55, val)
+        hash_table.resize_hash_table()
+        self.assertEqual(4, hash_table._size_of_arr())
+        val = hash_table.get('z')
+        self.assertIsNone(val)
+
+    def test_hash_table_delete(self):
+        hash_table = HashTable()
+        hash_table.insert('a', 44)
+        hash_table.insert('b', 55)
+        hash_table.insert('c', 2)
+        hash_table.insert('d', 57)
+        hash_table.insert('e', 122)
+        hash_table.insert('f', 1)
+        hash_table.insert('g', 12)
+        hash_table.insert('h', 11)
+        self.assertTrue(hash_table.delete('a'))
+        val = hash_table.get('a')
+        self.assertIsNone(val)
+
+    def test_quick_sort(self):
+        arr = [0, 4, -1, 55, 12, 8, 12]
+        qs = QuickSort(arr)
+        qs.sort()
+        self.assertEqual(sorted(arr), qs.arr)
+
+    def test_quick_sort2(self):
+        arr = []
+        qs = QuickSort(arr)
+        qs.sort()
+        self.assertEqual(sorted(arr), qs.arr)
+
+    def test_quick_sort3(self):
+        arr = [4]
+        qs = QuickSort(arr)
+        qs.sort()
+        self.assertEqual(sorted(arr), qs.arr)
+
+    def test_quick_sort4(self):
+        arr = [1, 2, 3, 4, 5, 6, 7]
+        qs = QuickSort(arr)
+        qs.sort()
+        self.assertEqual(sorted(arr), qs.arr)
+
+    def test_qu5(self):
+        arr = [7, 6, 5, 4, 3, 2, 1]
+        qs = QuickSort(arr)
+        qs.sort()
+        self.assertEqual(sorted(arr), qs.arr)
+
 
 if __name__ == '__main__':
     unittest.main()

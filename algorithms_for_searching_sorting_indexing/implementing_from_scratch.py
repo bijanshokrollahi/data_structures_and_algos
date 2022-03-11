@@ -4,6 +4,7 @@ copyright bijan shokrollahi
 02.05.2022
 
 """
+import random
 
 
 class InsertionSort:
@@ -337,4 +338,189 @@ class QuickSort:
                 self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
         self.arr[i+1], self.arr[right] = self.arr[right], self.arr[i+1]
         return i+1
+
+
+class QuickSelect:
+    def __init__(self, arr: list):
+        self.arr = arr
+
+    def quick_select(self, kth_smallest_element: int):
+        self._quick_select(kth_smallest_element, 0, len(self.arr) - 1)
+
+    def _quick_select(self, kth_smallest_element, left, right):
+        pivot = self._partition(left, right)
+        if pivot == kth_smallest_element:
+            return self.arr[pivot]
+        if pivot > kth_smallest_element:
+            return self._quick_select(kth_smallest_element, left, pivot-1)
+        return self._quick_select(kth_smallest_element, pivot+1, right)
+
+    def _partition(self, left: int, right: int):
+        x = self.arr[right]
+        i = left - 1
+        for j in range(left, right+1):
+            if self.arr[j] <= x:
+                i = i + 1
+                self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
+        self.arr[i+1], self.arr[right] = self.arr[right], self.arr[i+1]
+        return i
+
+
+class BstNodeItem:
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
+
+
+class Bst:
+    def __init__(self, val):
+        self.head = BstNodeItem(val)
+
+    def find(self, val):
+        return self._find(self.head, val)
+
+    def _find(self, node, val):
+        if node is None:
+            return node
+        else:
+            if node.val == val:
+                return node
+            elif val < node.val:
+                return self._insert_find(node.left, val)
+            else:
+                return self._insert_find(node.right, val)
+
+    def _insert_find(self, node, val):
+        if node is None:
+            return node
+        else:
+            if node.val == val:
+                return node
+            elif val < node.val:
+                if node.left is None:
+                    return node
+                return self._insert_find(node.left, val)
+            else:
+                if node.right is None:
+                    return node
+                return self._insert_find(node.right, val)
+
+    """
+    print_in_order_traversal(node)
+    recursive
+    if node is none:
+        return
+    print_in_order_traversal(node.left)
+    print(node.val)
+    print_in_order_traversal(node.right)
+    
+    """
+    def in_order_traversal(self, node):
+        if node is None:
+            return
+        self.in_order_traversal(node.left)
+        print(node.val)
+        self.in_order_traversal(node.right)
+
+    """
+    pre_order_traversal(node)
+    if node is none:
+        return
+    print(node.val)
+    pre_order_traversal(node.left)
+    pre_order_traversal(node.right)
+    """
+    def pre_order_traversal(self, node):
+        if node is None:
+            return
+        print(node.val)
+        self.pre_order_traversal(node.left)
+        self.pre_order_traversal(node.right)
+
+    """
+    post_order_traversal(node)
+    if node is none:
+        return none
+    post_order_traversal(node.left)
+    post_order_traversal(node.right)
+    print(node.val)
+    """
+
+    def post_order_traversal(self, node):
+        if node is None:
+            return
+        self.post_order_traversal(node.left)
+        self.post_order_traversal(node.right)
+        print(node.val)
+
+    def insert(self, val):
+        node = self._insert_find(self.head, val)
+        if val < node.val:
+            node.left = BstNodeItem(val)
+        else:
+            node.right = BstNodeItem(val)
+
+    def height(self):
+        return self._height(self.head)
+
+    def _height(self, node):
+        if node is None:
+            return 0
+        else:
+            return max(self._height(node.left), self._height(node.right)) + 1
+
+    def delete(self, val):
+        """
+         deletion cases
+         case 0 both children are none
+         case 1 one of the children is none
+         case 2 neither children are none
+             find successor which is one to the right and all the way left
+             replace w/ successor then delete successor
+         """
+        node = self._insert_find(self.head, val)
+        # if node is None:
+        #     return False
+        # elif node.left is None and node.right is None:
+        #     node = None
+        # elif node.left is not None and node.right is not None:
+        #     # find successor
+        #     # replace w/ successor
+        # elif node.left is None:
+        #     node = node.right
+        # else node.right is None:
+        #
+
+
+"""
+TREAP = TREE + HEAP
+if you know the insertions ahead of time you can randomize the insertion and end up getting around Ølog(n)
+add random seed value to each node. those seed values must follow heap rules. if not bubble up aka rotate left or right
+"""
+
+
+class RbtNode:
+    def __init__(self, val, color):
+        self.val = val
+        self.color = color
+        self.left = None
+        self.right = None
+
+
+class RedBlackTree:
+    """
+    rbt rules
+    1. roots and leaves must be black
+    2. every red node must have black children
+    3. the number of black nodes on any path from any node to a leaf must be the same
+        black height is defined for each node
+    """
+    def __init__(self, val):
+        self.root = RbtNode(val, 'black')
+
+
+class DirectedAcyclicGraph:
+    def __init__(self):
+        self.arr = []
 

@@ -212,6 +212,11 @@ class MyTestCase(unittest.TestCase):
         bst.insert(5)
         bst.in_order_traversal(bst.head)
 
+    def test_max_subarray_(self):
+        arr = [0, 10, 155, 22, -250, 12000]
+        max_val = max_subarray(arr, 0, len(arr)-1)
+        self.assertEqual(12250, max_val)
+
 
 if __name__ == '__main__':
     unittest.main()

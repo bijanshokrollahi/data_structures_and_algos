@@ -182,3 +182,106 @@ class FaangMasterClass:
         if m == 1:
             return new_list
         return head
+
+
+class DoubleNodeWChild:
+    def __init__(self, val, prev: 'DoubleNodeWChild' = None, next_node: 'DoubleNodeWChild' = None,
+                 child: 'DoubleNodeWChild' = None):
+        self.val = val
+        self.prev = prev
+        self.next_node = next_node
+        self.child = child
+
+
+class DoubleLinkedListWChild:
+    def __init__(self, val):
+        self.head = DoubleNodeWChild(val)
+
+    def flatten(self):
+        curr = self.head
+        while curr is not None:
+            if curr.child is not None:
+                self.flatten_helper(curr, curr.child, curr.next_node)
+            curr = curr.next_node
+
+    @staticmethod
+    def flatten_helper(curr: 'DoubleNodeWChild', child: 'DoubleNodeWChild', next_node: 'DoubleNodeWChild'):
+        if curr is None:
+            return
+        if child is None:
+            assert curr.next_node == next_node
+        curr.next_node = child
+        tmp_curr = child
+        curr.child = None
+        child.prev = curr
+        while tmp_curr.next_node is not None:
+            tmp_curr = tmp_curr.next_node
+        tmp_curr.next_node = next_node
+        if next_node is not None:
+            next_node.prev = tmp_curr
+
+    def to_list(self) -> list:
+        """
+        must be flattened
+        :return: list representation
+        """
+        dll_as_list = []
+        curr = self.head
+        while curr is not None:
+            dll_as_list.append(curr.val)
+            curr = curr.next_node
+        return dll_as_list
+
+
+class LLNode:
+    def __init__(self, val):
+        self.val = val
+        self.next = None
+
+
+class LLDetectCycle:
+    def __init__(self, val):
+        self.head = LLNode(val=val)
+
+    def cycle_exists(self) -> bool:
+        slow = self.head
+        fast = slow
+        if slow is None:
+            return False
+        while fast is not None:
+            slow = slow.next
+            fast = fast.next
+            if fast.next is None:
+                return False
+            fast = fast.next
+            if fast == slow:
+                return True
+        return False
+
+
+def is_valid(s: str) -> bool:
+    options_dict = {
+        '(': 'left',
+        ')': 'right',
+        '[': 'left',
+        ']': 'right',
+        '{': 'left',
+        '}': 'right'
+    }
+    mapping_dict = {
+        '(': ')',
+        '{': '}',
+        '[': ']'
+    }
+    ans_stack = []
+    for char in s:
+        if options_dict.get(char) == 'left':
+            ans_stack.append(char)
+        elif options_dict.get(char) == 'right':
+            if len(ans_stack) == 0:
+                return False
+            if mapping_dict.get(ans_stack.pop()) != char:
+                return False
+    if len(ans_stack) != 0:
+        return False
+    return True

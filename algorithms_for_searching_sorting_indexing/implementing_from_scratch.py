@@ -5,6 +5,7 @@ copyright bijan shokrollahi
 
 """
 import random
+TIME = 1
 
 
 class InsertionSort:
@@ -16,8 +17,8 @@ class InsertionSort:
             return None
         for i in range(1, len(self.arr)):
             j = i
-            while self.arr[j] < self.arr[j-1] and j > 0:
-                self.swap(j, j-1)
+            while self.arr[j] < self.arr[j - 1] and j > 0:
+                self.swap(j, j - 1)
                 j -= 1
 
     def swap(self, i: int, j: int) -> None:
@@ -63,7 +64,7 @@ class MergeSort:
         else:
             mid = (left + right) // 2
             self.merge_sort_helper(left, mid)
-            self.merge_sort_helper(mid+1, right)
+            self.merge_sort_helper(mid + 1, right)
             self.merge(left, mid, right)
 
     def merge(self, left, mid, right):
@@ -86,7 +87,7 @@ class MergeSort:
             tmp.append(self.arr[j])
             j += 1
         tmp_index = 0
-        for index in range(left, right+1):
+        for index in range(left, right + 1):
             self.arr[index] = tmp[tmp_index]
             tmp_index += 1
 
@@ -117,8 +118,9 @@ class MergeInsertionSort:
     def merge(self, left, mid, right) -> None:
         for i in range(mid, right + 1):
             curr_location = i
-            while curr_location > left and self.arr[curr_location] < self.arr[curr_location-1]:
-                self.arr[curr_location], self.arr[curr_location-1] = self.arr[curr_location-1], self.arr[curr_location]
+            while curr_location > left and self.arr[curr_location] < self.arr[curr_location - 1]:
+                self.arr[curr_location], self.arr[curr_location - 1] = self.arr[curr_location - 1], self.arr[
+                    curr_location]
                 curr_location -= 1
 
     def get_arr(self) -> list:
@@ -150,9 +152,9 @@ class HeapDS:
         assert index <= len(self)
         if index <= 1:
             return
-        elif self.keys[index] < self.keys[index//2]:
-            self.keys[index], self.keys[index//2] = self.keys[index//2], self.keys[index]
-            self.bubble_up(index//2)
+        elif self.keys[index] < self.keys[index // 2]:
+            self.keys[index], self.keys[index // 2] = self.keys[index // 2], self.keys[index]
+            self.bubble_up(index // 2)
         return
 
     def bubble_down(self, index) -> None:
@@ -188,7 +190,7 @@ class HeapDS:
 
     def heapify(self):
         # start from end of self.keys down to 1 and bubble down
-        for i in range(len(self)//2, 0, -1):
+        for i in range(len(self) // 2, 0, -1):
             self.bubble_down(i)
 
     def insert(self, key):
@@ -205,7 +207,7 @@ class HeapDS:
         #
         self.keys[index] = self.keys[len(self)]
         self.keys = self.keys[:-1]
-        if self.keys[index] < self.keys[index//2]:
+        if self.keys[index] < self.keys[index // 2]:
             self.bubble_up(index)
         else:
             self.bubble_down(index)
@@ -336,8 +338,8 @@ class QuickSort:
             if self.arr[j] <= x:
                 i = i + 1
                 self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
-        self.arr[i+1], self.arr[right] = self.arr[right], self.arr[i+1]
-        return i+1
+        self.arr[i + 1], self.arr[right] = self.arr[right], self.arr[i + 1]
+        return i + 1
 
 
 class QuickSelect:
@@ -352,17 +354,17 @@ class QuickSelect:
         if pivot == kth_smallest_element:
             return self.arr[pivot]
         if pivot > kth_smallest_element:
-            return self._quick_select(kth_smallest_element, left, pivot-1)
-        return self._quick_select(kth_smallest_element, pivot+1, right)
+            return self._quick_select(kth_smallest_element, left, pivot - 1)
+        return self._quick_select(kth_smallest_element, pivot + 1, right)
 
     def _partition(self, left: int, right: int):
         x = self.arr[right]
         i = left - 1
-        for j in range(left, right+1):
+        for j in range(left, right + 1):
             if self.arr[j] <= x:
                 i = i + 1
                 self.arr[i], self.arr[j] = self.arr[j], self.arr[i]
-        self.arr[i+1], self.arr[right] = self.arr[right], self.arr[i+1]
+        self.arr[i + 1], self.arr[right] = self.arr[right], self.arr[i + 1]
         return i
 
 
@@ -406,6 +408,35 @@ class Bst:
                     return node
                 return self._insert_find(node.right, val)
 
+    @staticmethod
+    def tree_minimum(node):
+        while node.left is not None:
+            node = node.left
+        return node
+
+    @staticmethod
+    def tree_maximum(node):
+        while node.right is not None:
+            node = node.right
+        return node
+
+    @staticmethod
+    def iterative_tree_search(node, val):
+        while node is not None and val != node.val:
+            if val < node.val:
+                node = node.left
+            else:
+                node = node.right
+        return node
+
+    def tree_search(self, node, val):
+        if node is None or val == node.val:
+            return node
+        if val < node.val:
+            return self.tree_search(node.left, val)
+        else:
+            return self.tree_search(node.right, val)
+
     """
     print_in_order_traversal(node)
     recursive
@@ -416,6 +447,7 @@ class Bst:
     print_in_order_traversal(node.right)
     
     """
+
     def in_order_traversal(self, node):
         if node is None:
             return
@@ -431,6 +463,7 @@ class Bst:
     pre_order_traversal(node.left)
     pre_order_traversal(node.right)
     """
+
     def pre_order_traversal(self, node):
         if node is None:
             return
@@ -470,6 +503,9 @@ class Bst:
         else:
             return max(self._height(node.left), self._height(node.right)) + 1
 
+    # def transplant(self, u, v):
+    #     if u.
+
     def delete(self, val):
         """
          deletion cases
@@ -479,11 +515,40 @@ class Bst:
              find successor which is one to the right and all the way left
              replace w/ successor then delete successor
          """
-        node = self._insert_find(self.head, val)
-        # if node is None:
-        #     return False
-        # elif node.left is None and node.right is None:
-        #     node = None
+        # insert find returns the parent of the node in question
+        parent = self._insert_find(self.head, val)
+        if parent is None:
+            return False
+        node = parent.left
+        if parent.right.val == val:
+            node = parent.right
+        # case 0 both children are none
+        if node.left is None and node.right is None:
+            if parent.right == node:
+                parent.right = None
+            else:
+                parent.left = None
+            del node
+            return True
+        # case 2 neither children are none
+        if node.right is not None and node.left is not None:
+            # complicated case
+            return True
+        # case 1 either child is none
+        if node.right is not None:
+            if parent.right == node:
+                parent.right = node.right
+            else:
+                parent.left = node.right
+            del node
+            return True
+        else:
+            if parent.right == node:
+                parent.right = node.left
+            else:
+                parent.left = node.left
+            del node
+            return True
         # elif node.left is not None and node.right is not None:
         #     # find successor
         #     # replace w/ successor
@@ -506,6 +571,7 @@ class RbtNode:
         self.color = color
         self.left = None
         self.right = None
+        self.parent = None
 
 
 class RedBlackTree:
@@ -516,11 +582,218 @@ class RedBlackTree:
     3. the number of black nodes on any path from any node to a leaf must be the same
         black height is defined for each node
     """
+
     def __init__(self, val):
         self.root = RbtNode(val, 'black')
 
+    def find(self, val):
+        return self.root
 
-class DirectedAcyclicGraph:
-    def __init__(self):
-        self.arr = []
+    def delete(self, val):
+        return self.root
 
+    def insert(self, val):
+        """
+        1. newly inserted node is always colored red
+        2. if lucky, the parent of new node is black and nothing needs to be done
+        3. unlucky if parent is red. will cause red-red violation
+        :param val:
+        :return:
+        """
+        return self.root
+
+    def left_rotate(self, node_x):
+        node_y = node_x.right
+        node_x.right = node_y.left
+        if node_y.left is not None:
+            node_y.left.parent = node_x
+        node_y.parent = node_x.parent
+        if node_x.parent is None:
+            self.root = node_y
+        elif node_x == node_x.parent.left:
+            node_x.parent.left = node_y
+        else:
+            node_x.parent.right = node_y
+        node_y.left = node_x
+        node_x.parent = node_y
+
+
+"""
+skip lists easier than rb tree, randomized data structure
+rules
+1. many layers
+each layer <= layer below
+bottom layer = all elements
+each layer is sorted
+each node has pointer to down + right
+"""
+
+"""
+GRAPHS
+directed graph vs undirected graph(each edge is bidirectional. symmetric relation)
+different representations
+adjacency matrix - inefficient becuase it has a size of n^2
+adjacency list - each node in the list has a pointer to a list of its neighbors, size n + number of edges
+
+"""
+
+
+# BFS
+# 1. can only visit node once
+# 2. driven by queue data structure which stores the nodes
+"""
+node
+    parent: which parent did we discover this node from
+    depth: depth of the node
+    seen: true/false if the node has been visited
+"""
+
+
+class GraphNode:
+    def __init__(self, val, parent=None, depth=0, seen=False):
+        self.val = val
+        self.parent = parent
+        self.depth = depth
+        self.seen = seen
+        self.neighbors: list[GraphNode] = []
+
+
+def bfs(graph, node_to_start: GraphNode):
+    from queue import Queue
+    bfs_queue = Queue()
+    bfs_queue.put(node_to_start)
+    node_to_start.depth = 0
+    node_to_start.seen = True
+    node_to_start.parent = None
+    while not bfs_queue.empty():
+        node = bfs_queue.get()
+        for neighbor in node.neighbors:
+            if neighbor.seen is False:
+                neighbor.parent = node
+                neighbor.depth = node.depth + 1
+                neighbor.seen = True
+                bfs_queue.put(neighbor)
+
+
+class DfsGraphNode:
+    def __init__(self, val, parent=None, time=None, finished=None, seen=False):
+        self.val = val
+        self.parent = parent
+        self.time = time
+        self.finished = finished
+        self.seen = seen
+        self.neighbors: list[DfsGraphNode] = []
+
+
+def dfs_visit(graph, node):
+    global TIME
+    if node.seen:
+        return
+    TIME += 1
+    node.time = TIME
+    for neighbor in node.neighbors:
+        if neighbor.seen is False:
+            neighbor.parent = node
+            dfs_visit(graph, neighbor)
+            neighbor.seen = True
+    node.finished = TIME
+
+
+"""
+topological sort
+do dfs when node finishes add to head of list, you end with topologically sorted graph, only for dag
+"""
+
+"""
+strongly connected components
+dfs on g
+transpose g
+dfs on transposed g in descending order of finish times (heap), remove nodes from consideration as they are visited
+
+"""
+
+"""
+shortest path problems
+single source or all pairs
+bellman-ford
+
+shortest path on dag
+topological sort, then iterate through each vertex in topological order and relxax
+"""
+
+
+""""
+dijkstra 
+
+until all nodes are visited
+choose unvisted node with smallest distance value, current_node
+    relax outgoing edges of current_node
+    set current_node to visited
+"""
+
+
+def dijkstra(vertices, edges, source_node):
+    import heapq
+    for vertex in vertices:
+        if vertex == source_node:
+            vertex.depth = 0
+            vertex.parent = None
+        else:
+            vertex.depth = float('inf')
+            vertex.parent = None
+
+    heap = []
+    # will need to override __lt__
+    heapq.heapify(heap)
+    while len(heap) > 0:
+        curr_node = heapq.heappop(heap)
+        if curr_node.visited is False:
+            for neighbor in curr_node.neighbors:
+                relax(neighbor)
+
+
+def relax(graph, neighbor):
+    """
+    if the current path cost is > current cost + the wegith of the edge
+        set the new cost to current cost + weight of the edge
+        set the parent of the node to
+    :param graph:
+    :param neighbor:
+    :return:
+    """
+    return 0
+
+
+def max_subarray(array, left, right):
+    if left == right:
+        return 0
+    elif right == left + 1:
+        return max(array[right] - array[left], 0)
+    else:
+        middle = (left + right) // 2
+        m1 = max_subarray(array, left, middle)
+        m2 = max_subarray(array, middle+1, right)
+        min_m1 = find_min(array, left, middle)
+        max_m2 = find_max(array, middle+1, right)
+        return max(m1, m2, max_m2 - min_m1)
+
+
+def find_min(array, left, right):
+    min_found = float('inf')
+    for i in range(left, right+1):
+        min_found = min(min_found, array[i])
+    return min_found
+
+
+def find_max(array, left, right):
+    max_found = float('-inf')
+    for i in range(left, right+1):
+        max_found = max(max_found, array[i])
+    return max_found
+
+
+"""
+notes:
+
+b[i] = a[i] - i
+"""
